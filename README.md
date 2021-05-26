@@ -13,8 +13,6 @@ Features
 Community
 ---------
 
-* QQ 群：376389675
-
 Documentation
 ---------
 
