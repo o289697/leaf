@@ -128,10 +128,13 @@ func (server *WSServer) Start() {
 			CheckOrigin:      func(_ *http.Request) bool { return true },
 		},
 	}
+	
+	//http.HandleFunc("/",  func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("Hello, World"))  })
+        http.Handle("/ws",              server.handler)
 
 	httpServer := &http.Server{
 		Addr:           server.Addr,
-		Handler:        server.handler,
+		//Handler:        server.handler,
 		ReadTimeout:    server.HTTPTimeout,
 		WriteTimeout:   server.HTTPTimeout,
 		MaxHeaderBytes: 1024,
