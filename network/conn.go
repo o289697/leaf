@@ -9,6 +9,7 @@ type Conn interface {
 	WriteMsg(args ...[]byte) error
 	LocalAddr() net.Addr
 	RemoteAddr() net.Addr
+	ClientIP() string
 	Close()
 	Destroy()
 }
