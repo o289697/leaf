@@ -2,10 +2,11 @@ package network
 
 import (
 	"errors"
-	"github.com/gorilla/websocket"
-	"github.com/o289697/leaf/log"
 	"net"
 	"sync"
+
+	"github.com/gorilla/websocket"
+	"github.com/o289697/leaf/log"
 )
 
 type WebsocketConnSet map[*websocket.Conn]struct{}
@@ -16,6 +17,7 @@ type WSConn struct {
 	writeChan chan []byte
 	maxMsgLen uint32
 	closeFlag bool
+	clientIP  string
 }
 
 func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSConn {
@@ -90,6 +92,17 @@ func (wsConn *WSConn) LocalAddr() net.Addr {
 
 func (wsConn *WSConn) RemoteAddr() net.Addr {
 	return wsConn.conn.RemoteAddr()
+}
+
+func (wsConn *WSConn) ClientIP() string {
+	if wsConn.clientIP == "" {
+		return wsConn.conn.RemoteAddr().String()
+	}
+	return wsConn.clientIP
+}
+func (wsConn *WSConn) SetClientIP(ip string) error {
+	wsConn.clientIP = ip
+	return nil
 }
 
 // goroutine not safe
