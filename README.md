@@ -16,9 +16,7 @@ Community
 Documentation
 ---------
 
-* [文档]https://github.com/name5566/leaf
+* [Documentation] https://github.com/name5566/leaf
 
 Licensing
 ---------
-
-Leaf is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/o289697/leaf/blob/master/LICENSE) for the full license text.
