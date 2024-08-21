@@ -109,8 +109,8 @@ func (tcpConn *TCPConn) ClientIP() string {
 	return tcpConn.conn.RemoteAddr().String()
 }
 
-func (tcpConn *TCPConn) ClientOrigin() string {
-	return tcpConn.conn.RemoteAddr().String()
+func (tcpConn *TCPConn) IsWebSocket() (bool,interface{}) {
+	return false,nil
 }
 
 func (tcpConn *TCPConn) ReadMsg() ([]byte, error) {

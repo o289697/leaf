@@ -148,8 +148,8 @@ func (a *agent) ClientIP() string {
 	return a.conn.ClientIP()
 }
 
-func (a *agent) ClientOrigin() string {
-	return a.conn.ClientOrigin()
+func (a *agent) IsWebSocket() (bool,interface{}) {
+	return a.conn.IsWebSocket()
 }
 
 func (a *agent) Close() {

@@ -68,7 +68,7 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	wsConn := newWSConn(conn, handler.pendingWriteNum, handler.maxMsgLen)
 	wsConn.SetClientIP(handler.clientIP(r))
-	wsConn.SetClientOrigin(r.Header.Get("Origin"))
+	wsConn.SetRequest(r)
 	agent := handler.newAgent(wsConn)
 	agent.Run()
 

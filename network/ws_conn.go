@@ -3,6 +3,7 @@ package network
 import (
 	"errors"
 	"net"
+	"net/http"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -18,7 +19,7 @@ type WSConn struct {
 	maxMsgLen uint32
 	closeFlag bool
 	clientIP  string
-	clientOrigin  string
+	rquest    *http.Request
 }
 
 func newWSConn(conn *websocket.Conn, pendingWriteNum int, maxMsgLen uint32) *WSConn {
@@ -106,11 +107,11 @@ func (wsConn *WSConn) SetClientIP(ip string) error {
 	return nil
 }
 
-func (wsConn *WSConn) ClientOrigin() string {
-	return wsConn.clientOrigin
+func (wsConn *WSConn) IsWebSocket() (bool, interface{}) {
+	return true, wsConn.rquest
 }
-func (wsConn *WSConn) SetClientOrigin(origin string) error {
-	wsConn.clientOrigin = origin
+func (wsConn *WSConn) SetRequest(r *http.Request) error {
+	wsConn.rquest = r
 	return nil
 }
 

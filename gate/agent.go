@@ -9,7 +9,7 @@ type Agent interface {
 	LocalAddr() net.Addr
 	RemoteAddr() net.Addr
 	ClientIP() string
-	ClientOrigin() string
+	IsWebSocket() (bool,interface{})
 	Close()
 	Destroy()
 	UserData() interface{}
