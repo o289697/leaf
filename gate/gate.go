@@ -124,7 +124,8 @@ func (a *agent) OnClose() {
 
 func (a *agent) WriteMsg(msg interface{}) {
 	if a.gate.Processor != nil {
-		data, err := a.gate.Processor.Marshal(msg)
+		jsonMsg, _ := a.IsWebSocket()
+		data, err := a.gate.Processor.Marshal(msg,jsonMsg)
 		if err != nil {
 			log.Error("marshal message %v error: %v", reflect.TypeOf(msg), err)
 			return

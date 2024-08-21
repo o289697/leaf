@@ -156,7 +156,7 @@ func (p *Processor) Unmarshal(data []byte) (interface{}, error) {
 }
 
 // goroutine safe
-func (p *Processor) Marshal(msg interface{}) ([][]byte, error) {
+func (p *Processor) Marshal(msg interface{},jsonMsg bool) ([][]byte, error) {
 	msgType := reflect.TypeOf(msg)
 
 	// id

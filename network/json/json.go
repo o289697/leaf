@@ -156,7 +156,7 @@ func (p *Processor) Unmarshal(data []byte) (interface{}, error) {
 }
 
 // goroutine safe
-func (p *Processor) Marshal(msg interface{}) ([][]byte, error) {
+func (p *Processor) Marshal(msg interface{},jsonMsg bool) ([][]byte, error) {
 	msgType := reflect.TypeOf(msg)
 	if msgType == nil || msgType.Kind() != reflect.Ptr {
 		return nil, errors.New("json message pointer required")
@@ -166,8 +166,17 @@ func (p *Processor) Marshal(msg interface{}) ([][]byte, error) {
 		return nil, fmt.Errorf("message %v not registered", msgID)
 	}
 
-	// data
-	m := map[string]interface{}{msgID: msg}
+	// data	
+	var m interface{}
+	if jsonMsg {
+		m = map[string]interface{}{
+			"id":   msgID,
+			"data": msg,
+		}
+	}else{
+		m = map[string]interface{}{msgID: msg}
+	}
+
 	data, err := json.Marshal(m)
 	return [][]byte{data}, err
 }
