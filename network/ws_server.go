@@ -2,12 +2,14 @@ package network
 
 import (
 	"crypto/tls"
-	"github.com/gorilla/websocket"
-	"github.com/name5566/leaf/log"
 	"net"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
+
+	"github.com/gorilla/websocket"
+	"github.com/o289697/leaf/log"
 )
 
 type WSServer struct {
@@ -65,6 +67,8 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handler.mutexConns.Unlock()
 
 	wsConn := newWSConn(conn, handler.pendingWriteNum, handler.maxMsgLen)
+	wsConn.SetClientIP(handler.clientIP(r))
+	wsConn.SetClientOrigin(r.Header.Get("Origin"))
 	agent := handler.newAgent(wsConn)
 	agent.Run()
 
@@ -74,6 +78,26 @@ func (handler *WSHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	delete(handler.conns, conn)
 	handler.mutexConns.Unlock()
 	agent.OnClose()
+}
+
+func (handler *WSHandler) clientIP(r *http.Request) string {
+
+	xForwardedFor := r.Header.Get("X-Forwarded-For")
+	ip := strings.TrimSpace(strings.Split(xForwardedFor, ",")[0])
+	if ip != "" {
+		return ip
+	}
+
+	ip = strings.TrimSpace(r.Header.Get("X-Real-Ip"))
+	if ip != "" {
+		return ip
+	}
+
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr)); err == nil {
+		return ip
+	}
+
+	return ""
 }
 
 func (server *WSServer) Start() {
@@ -129,9 +153,12 @@ func (server *WSServer) Start() {
 		},
 	}
 
+	//http.HandleFunc("/",  func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("Hello, World"))  })
+	http.Handle("/ws", server.handler)
+
 	httpServer := &http.Server{
-		Addr:           server.Addr,
-		Handler:        server.handler,
+		Addr: server.Addr,
+		//Handler:        server.handler,
 		ReadTimeout:    server.HTTPTimeout,
 		WriteTimeout:   server.HTTPTimeout,
 		MaxHeaderBytes: 1024,

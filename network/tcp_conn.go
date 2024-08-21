@@ -1,9 +1,10 @@
 package network
 
 import (
-	"github.com/name5566/leaf/log"
 	"net"
 	"sync"
+
+	"github.com/o289697/leaf/log"
 )
 
 type ConnSet map[net.Conn]struct{}
@@ -102,6 +103,14 @@ func (tcpConn *TCPConn) LocalAddr() net.Addr {
 
 func (tcpConn *TCPConn) RemoteAddr() net.Addr {
 	return tcpConn.conn.RemoteAddr()
+}
+
+func (tcpConn *TCPConn) ClientIP() string {
+	return tcpConn.conn.RemoteAddr().String()
+}
+
+func (tcpConn *TCPConn) ClientOrigin() string {
+	return tcpConn.conn.RemoteAddr().String()
 }
 
 func (tcpConn *TCPConn) ReadMsg() ([]byte, error) {

@@ -1,12 +1,13 @@
 package gate
 
 import (
-	"github.com/name5566/leaf/chanrpc"
-	"github.com/name5566/leaf/log"
-	"github.com/name5566/leaf/network"
 	"net"
 	"reflect"
 	"time"
+
+	"github.com/o289697/leaf/chanrpc"
+	"github.com/o289697/leaf/log"
+	"github.com/o289697/leaf/network"
 )
 
 type Gate struct {
@@ -141,6 +142,14 @@ func (a *agent) LocalAddr() net.Addr {
 
 func (a *agent) RemoteAddr() net.Addr {
 	return a.conn.RemoteAddr()
+}
+
+func (a *agent) ClientIP() string {
+	return a.conn.ClientIP()
+}
+
+func (a *agent) ClientOrigin() string {
+	return a.conn.ClientOrigin()
 }
 
 func (a *agent) Close() {
